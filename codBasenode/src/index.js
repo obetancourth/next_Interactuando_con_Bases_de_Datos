@@ -1,24 +1,16 @@
 const express = require('express');
 let router = express.Router(),
-    Usuario = require('./models/usuarios');
+    userrouter = require('./usuarios'),
+    eventrouter = require('./eventos');
 
 
-router.post('/login', (req, res)=>{
-  let {user, pass} = req.body;
-  Usuario.findOne({ useremail: user }, function(err, _usuario) {
-    if (err) throw err;
-    if (!_usuario) return res.send("invalido");
-    _usuario.validarPassword( pass, (err, isMatch) => {
-        if (err) throw err;
-        console.log(isMatch);
-        if ( isMatch ) {
-          req.session.user = _usuario.toJSON();
-          //eliminamos el atributo password ya que no es necesario
-          delete req.session.user.userpswd;
-          return res.send("Validado");
-        }
-        return res.send("invalido");
-    });
-});
-});//login
+const verifySignin = (req, res, next)=>{
+  if(!req.session.user){
+    return res.send('Not Allowed');
+  }
+  return next();
+}
+router.use('/', userrouter);
+router.use('/events', verifySignin ,eventrouter);
+
 module.exports = router;

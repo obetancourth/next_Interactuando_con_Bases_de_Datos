@@ -10,7 +10,12 @@ class EventManager {
     obtenerDataInicial() {
         let url = this.urlBase + "/all"
         $.get(url, (response) => {
-            this.inicializarCalendario(response)
+            if(Array.isArray(response)){
+              this.inicializarCalendario(response);
+            }else{
+              alert("No ha iniciado sesión");
+              window.location.replace('index.html');
+            }
         })
     }
 
@@ -46,13 +51,26 @@ class EventManager {
                     end: end
                 }
                 $.post(url, ev, (response) => {
-                    alert(response)
+                    if(response.id){
+                      ev.id = response.id;
+                      $('.calendario').fullCalendar('renderEvent', ev);
+                    }else{
+                      alert(response);
+                    }
+
                 })
-                $('.calendario').fullCalendar('renderEvent', ev)
+
             } else {
                 alert("Complete los campos obligatorios para el evento")
             }
         })
+        $('.logout-container').on('click', (ev)=>{
+          ev.preventDefault();
+          let url = '/logout';
+          $.get(url, {} , (data)=>{
+            window.location.replace('index.html');
+          });
+        });
     }
 
     inicializarFormulario() {
@@ -80,6 +98,22 @@ class EventManager {
         })
     }
 
+    actualizarEvento(evento) {
+        let id = evento.id,
+            start = moment(evento.start).format('YYYY-MM-DD HH:mm:ss'),
+            end = moment(evento.end).format('YYYY-MM-DD HH:mm:ss');
+
+        let url = this.urlBase + "/update/" + id;
+        $.post(url, {id:id, start:start, end:end}, (data) =>{
+            if (data.msg=="OK") {
+              alert('Se ha actualizado el evento exitosamente')
+            }else {
+              alert(data.msg)
+            }
+          });
+    }
+
+
     inicializarCalendario(eventos) {
         $('.calendario').fullCalendar({
             header: {
@@ -87,7 +121,7 @@ class EventManager {
                 center: 'title',
                 right: 'month,agendaWeek,basicDay'
             },
-            defaultDate: '2016-11-01',
+            defaultDate: new Date(),
             navLinks: true,
             editable: true,
             eventLimit: true,
@@ -99,7 +133,7 @@ class EventManager {
             },
             events: eventos,
             eventDragStart: (event,jsEvent) => {
-                $('.delete').find('img').attr('src', "img/trash-open.png");
+                $('.delete').find('img').attr('src', "img/delete.png");
                 $('.delete').css('background-color', '#a70f19')
             },
             eventDragStop: (event,jsEvent) => {
@@ -114,6 +148,7 @@ class EventManager {
                         this.eliminarEvento(event)
                         $('.calendario').fullCalendar('removeEvents', event.id);
                     }
+
                 }
             })
         }
