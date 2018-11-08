@@ -1,17 +1,19 @@
 {
-    "name": "node_calendar_next_evaluation",
-    "version": "1.0.0",
-    "description": "Evaluación de Curso Interactuando con Base de Datos de Next",
-    "main": "index.js",
-    "scripts": {
-        "start": "node ./server/index.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "author": "Orlando Betancourth",
-    "license": "ISC",
-    "dependencies": {
-        "body-parser": "^1.18.3",
-        "express": "^4.16.4",
-        "mongoose": "^5.3.10"
-    }
+  "name": "node_calendar_next_evaluation",
+  "version": "1.0.0",
+  "description": "Evaluación de Curso Interactuando con Base de Datos de Next",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Orlando Betancourth",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.2",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "mongoose": "^5.3.10"
+  }
 }

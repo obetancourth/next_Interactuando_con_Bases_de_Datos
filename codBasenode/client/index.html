@@ -32,8 +32,12 @@
                 }, function(response) {
                     if (response == "Validado") {
                         window.location.href = "http://localhost:3000/main.html"
+                    } else {
+                        alert("Credenciales no son Válidas");
                     }
-                })
+                }).error(function() {
+                    alert("Falló el tratar de validar sus credenciales");
+                });
             } else {
                 alert("Complete todos los campos")
             }
