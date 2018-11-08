@@ -1,5 +1,5 @@
 <?php
-  
+
 require_once 'libs/db.php';
 session_start();
 try {
@@ -23,15 +23,17 @@ try {
         );
         $insertedData = $db->ejecutarComando($sqlstr, $data);
         if ($insertedData > 0) {
+            $newId = $db->obtenerUltimoId();
             echo json_encode(
                 array(
-                    "msg"=>"OK"
+                    "msg"=>"OK",
+                    "id"=>$newId
                 )
             );
         } else {
             echo json_encode(
                 array(
-                    "msg"=>"No se ha guardado ningún documento"
+                    "msg"=>"No se ha guardado ningún evento"
                 )
             );
         }
@@ -45,7 +47,7 @@ try {
 } catch (Exception $error) {
     echo json_encode(
         array(
-            "msg"=>"Error al extraer los eventos"
+            "msg"=>"Error al ingresar los eventos"
         )
     );
 }
